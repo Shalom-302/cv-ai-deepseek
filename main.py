@@ -89,17 +89,26 @@ def analyze_image_with_gemini(image):
     """
     response = model.generate_content([prompt, image])
     return response.text
-
-# Interface Streamlit
 def main():
-    st.set_page_config("Analyseur de CV")
+    st.set_page_config(page_title="Analyseur de CV", page_icon="📄")
     st.header("Analyseur de CV avec DeepSeek")
 
-    # Upload de fichier (PDF ou image)
-    uploaded_file = st.file_uploader("Téléchargez un CV (PDF ou Image)", type=["pdf", "jpg", "jpeg", "png"])
+    # Choix du type de fichier
+    file_type = st.radio(
+        "Choisissez le type de fichier à analyser :",
+        options=["PDF", "Image"],  # Options disponibles
+        index=0,  # Option sélectionnée par défaut
+        help="Sélectionnez si vous voulez analyser un PDF ou une image."
+    )
 
-    if uploaded_file is not None:
-        if uploaded_file.type == "application/pdf":
+    # Upload de fichier en fonction du choix
+    if file_type == "PDF":
+        uploaded_file = st.file_uploader(
+            "Téléchargez un CV au format PDF",
+            type=["pdf"],  # Seuls les PDF sont autorisés
+            help="Veuillez uploader un fichier PDF."
+        )
+        if uploaded_file is not None:
             st.write("Fichier PDF détecté.")
             # Extraire le texte du PDF
             raw_text = get_pdf_text([uploaded_file])
@@ -111,7 +120,13 @@ def main():
                 analysis_result = analyze_text_with_deepseek(raw_text)
                 st.write(analysis_result)
 
-        else:
+    elif file_type == "Image":
+        uploaded_file = st.file_uploader(
+            "Téléchargez une image de CV",
+            type=["jpg", "jpeg", "png"],  # Seules les images sont autorisées
+            help="Veuillez uploader une image au format JPG, JPEG ou PNG."
+        )
+        if uploaded_file is not None:
             st.write("Fichier image détecté.")
             # Ouvrir l'image
             image = Image.open(uploaded_file)
@@ -123,6 +138,5 @@ def main():
                 analysis_result = analyze_image_with_gemini(image)
                 st.write(analysis_result)
 
-# Point d'entrée
 if __name__ == "__main__":
     main()
