@@ -52,13 +52,15 @@ def analyze_text_with_deepseek(text):
     messages = [
         {
             "role": "system",
-            "content": """Extrayez les informations suivantes du CV puis formattez-les en JSON de façon a les integrer dans une base de données :
+            "content": 
+            """Extrayez les informations suivantes du CV puis formattez-les en JSON de façon a les integrer dans une base de données :
             - ÉDUCATION (liste des diplômes, établissements et années)
             - EXPÉRIENCES (postes, entreprises, dates, descriptions)
             - COMPÉTENCES (techniques et soft skills)
             - LANGUES (listées avec niveaux)
             - CERTIFICATIONS
-            - CONTACT (email, téléphone, LinkedIn)"""
+            - CONTACT (email, téléphone, LinkedIn)
+            """
         },
         {
             "role": "user",
@@ -79,7 +81,7 @@ def analyze_text_with_deepseek(text):
 def analyze_image_with_gemini(image):
     model = genai.GenerativeModel('gemini-1.5-pro')
     prompt = """
-    Extrais les informations suivantes de ce CV :
+    Extrayez les informations suivantes du CV puis formattez-les en JSON de façon a les integrer dans une base de données :
     - ÉDUCATION (liste des diplômes, établissements et années)
     - EXPÉRIENCES (liste des postes, entreprises, dates et descriptions)
     - COMPÉTENCES (liste des compétences techniques et soft skills)
@@ -140,3 +142,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    
+            
