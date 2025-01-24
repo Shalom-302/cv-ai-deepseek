@@ -52,7 +52,7 @@ def analyze_text_with_deepseek(text):
     messages = [
         {
             "role": "system",
-            "content": """Extrayez les informations suivantes du CV:
+            "content": """Extrayez les informations suivantes du CV puis formattez-les en JSON de façon a les integrer dans une base de données :
             - ÉDUCATION (liste des diplômes, établissements et années)
             - EXPÉRIENCES (postes, entreprises, dates, descriptions)
             - COMPÉTENCES (techniques et soft skills)
