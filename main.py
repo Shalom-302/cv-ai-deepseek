@@ -77,18 +77,32 @@ def analyze_image_with_gemini(image, output_format):
     
     # Adaptation du prompt selon le format de sortie
     if output_format == "JSON":
-        prompt = """Extrayez les informations suivantes du CV puis formattez-les en JSON :"""
+        prompt = """Extrayez les informations suivantes du document (CV ou CNI) puis formattez-les en JSON :"""
     else:
-        prompt = """Extrayez les informations suivantes du CV et présentez-les sous forme de texte brut structuré :"""
+        prompt = """Extrayez les informations suivantes du document (CV ou CNI) et présentez-les sous forme de texte brut structuré :"""
     
     full_prompt = f"""
     {prompt}
-    - ÉDUCATION (liste des diplômes, établissements et années)
-    - EXPÉRIENCES (liste des postes, entreprises, dates et descriptions)
-    - COMPÉTENCES (liste des compétences techniques et soft skills)
-    - LANGUES (liste des langues parlées et niveaux)
-    - CERTIFICATIONS (liste des certifications obtenues)
-    - CONTACT (email, téléphone, LinkedIn, etc.)
+    - Pour un CV :
+        - ÉDUCATION (liste des diplômes, établissements et années)
+        - EXPÉRIENCES (liste des postes, entreprises, dates et descriptions)
+        - COMPÉTENCES (liste des compétences techniques et soft skills)
+        - LANGUES (liste des langues parlées et niveaux)
+        - CERTIFICATIONS (liste des certifications obtenues)
+        - CONTACT (email, téléphone, LinkedIn, etc.)
+    - Pour une CNI :
+        - documentType (type de document)
+        - number (numéro de la CNI)
+        - nationality (nationalité)
+        - firstName (prénom)
+        - lastName (nom)
+        - dateOfBirth (date de naissance)
+        - sex (sexe)
+        - height (taille)
+        - placeOfBirth (lieu de naissance)
+        - issueDate (date d'émission)
+        - expiryDate (date d'expiration)
+        - placeOfIssue (lieu d'émission)
     """
 
     response = model.generate_content([full_prompt, image])
@@ -126,7 +140,7 @@ def main():
         uploaded_file = st.file_uploader("Téléchargez votre CV (Image)", type=["jpg", "jpeg", "png"])
         if uploaded_file:
             image = Image.open(uploaded_file)
-            st.image(image, use_column_width=True)
+            st.image(image, use_container_width=True)
             with st.spinner("Analyse de l'image..."):
                 st.subheader("Résultat de l'analyse")
                 analysis_result = analyze_image_with_gemini(image, output_format)
